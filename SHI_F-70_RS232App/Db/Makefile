@@ -11,7 +11,7 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
 #DB += xxx.db
-DB_INSTALLS += ../SHI_F-70_RS232.proto  
+DATA += SHI_F-70_RS232.proto
 DB += SHI_F-70_RS232.template
 DB += SHI_F-70_RS232_monitor.template SHI_F-70_RS232_control.template
 
