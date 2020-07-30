@@ -1,3 +1,23 @@
+record(bo, "$(P):SIM")
+{
+    field(SCAN, "Passive")
+    field(DTYP, "Soft Channel")
+    field(ZNAM, "NO")
+    field(ONAM, "YES")
+    field(VAL, "$(RECSIM=0)")
+    field(PINI, "YES")
+}
+
+record(bo, "$(P):DISABLE")
+{
+    field(DESC, "Disable comms")
+    field(PINI, "YES")
+    field(VAL, "$(DISABLE=0)")
+    field(OMSL, "supervisory")
+    field(ZNAM, "COMMS ENABLED")
+    field(ONAM, "COMMS DISABLED")
+}
+
 #
 # This template has monitor-only capability, no control. It sould work 
 # in configuration mode 2, in which one can control the compressor through 
@@ -13,6 +33,7 @@ record(bi, "$(P):Error") {
    field(OSV, "MAJOR")
    field(ONAM, "Error")
 }
+
 record(ai, "$(P):OpHours") {
    field(DESC, "Hours in operation")
    field(SCAN, "10 second")
@@ -22,6 +43,9 @@ record(ai, "$(P):OpHours") {
    field(HIHI, "$(MAX_OPHOURS=20000)")
    field(HHSV, "MAJOR")
    info(autosaveFields, "HIHI")
+   field(SIML, "$(P):SIM")
+   field(SIOL, "$(P):SIM:OpHours")
+   field(SDIS, "$(P):DISABLE")
 }
 
 record(stringin, "$(P):Firmware") {
@@ -29,6 +53,9 @@ record(stringin, "$(P):Firmware") {
    field(PINI, "YES")
    field(DTYP, "stream")
    field(INP, "@SHI_F-70_RS232.proto getFWV $(PORT) 0")
+   field(SIML, "$(P):SIM")
+   field(SIOL, "$(P):SIM:Firmware")
+   field(SDIS, "$(P):DISABLE")
 }
 
 record(mbbiDirect, "$(P):Status") {
@@ -38,6 +65,9 @@ record(mbbiDirect, "$(P):Status") {
    field(NOBT, "16")
    field(INP, "@SHI_F-70_RS232.proto getStat $(PORT) 0")
    field(FLNK, "$(P):State")
+   field(SIML, "$(P):SIM")
+   field(SIOL, "$(P):SIM:Status")
+   field(SDIS, "$(P):DISABLE")
 }
 
 record(mbbi, "$(P):State") {
@@ -176,6 +206,9 @@ record(ai, "$(P):HeTemp") {
    field(DTYP, "stream")
    field(INP, "@SHI_F-70_RS232.proto getTemp1 $(PORT) 0")
    field(EGU, "C")
+   field(SIML, "$(P):SIM")
+   field(SIOL, "$(P):SIM:HeTemp")
+   field(SDIS, "$(P):DISABLE")
 }
 
 record(ai, "$(P):WaterOutletTemp") {
@@ -220,7 +253,11 @@ record(ai, "$(P):HeReturnPress") {
    field(DTYP, "stream")
    field(INP, "@SHI_F-70_RS232.proto getPress1 $(PORT) 0")
    field(EGU, "psig")
+   field(SIML, "$(P):SIM")
+   field(SIOL, "$(P):SIM:HeReturnPress")
+   field(SDIS, "$(P):DISABLE")
 }
+
 record(ai, "$(P):Press2") {
    field(DESC, "Probably not used")
    field(SCAN, "I/O Intr")
@@ -238,6 +275,7 @@ record(calc, "$(P):Alarm_Summary_Calc") {
   field(CALC, "A")
   field(FLNK, "$(P):Alarm_Summary_Calc2")  
 }
+
 record(calcout, "$(P):Alarm_Summary_Calc2") {
   field(INPA, "$(P):Alarm_Summary_Calc.STAT")
   field(CALC, "A!=0?1:0")
@@ -245,11 +283,28 @@ record(calcout, "$(P):Alarm_Summary_Calc2") {
   field(OOPT, "Every Time")
   field(OUT, "$(P):Alarm_Summary PP")
 }
+
 record(bi, "$(P):Alarm_Summary") {
   field(ZNAM, "No Alarm")
   field(ONAM, "Alarm")
   field(OSV, "MAJOR")
   field(PINI, "YES")
   field(VAL, "0")  
+}
+
+record(ai, "$(P):SIM:OpHours") {
+}
+
+record(ai, "$(P):SIM:HeReturnPress") {
+}
+
+record(ai, "$(P):SIM:HeTemp") {
+}
+
+record(stringin, "$(P):SIM:Firmware") {
+    field(VAL, "test firmware")
+}
+
+record(mbbiDirect, "$(P):SIM:Status") {
 }
 
